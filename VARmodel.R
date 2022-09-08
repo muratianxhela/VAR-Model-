@@ -1,4 +1,4 @@
-##########MAKEIT###################### ThesiS R PART ######TIME##########TRUST###########################
+################################  ##########################################
 
 # Title:    Importing data from the database
 # File:      yahooo
@@ -6,7 +6,7 @@
 
 
 #### ABSTRACT::: After pulling data directly from FRED and creating variables for our dataset, 
-#we estimate a model of Japan capital flows. Granger Causality tests, 
+#We estimate a model of Japan capital flows. Granger Causality tests, 
 #orthogonalized Impulse Response Functions, and Forecast Error Variance Decompositions show the impact of income and monetary variables on these flows. 
  
 
@@ -51,8 +51,7 @@ library(readxl)
 #Install packages if necessary
 #Download data from FRED directly
 
-#### Basically we are using JAPAN capital flows, the JAPAN capital finacial account as a function of JAPAN modey and us interest rate as well as gdp in both countries 
-### we are modeling capital flows 
+
 #JAPAN KFA = diff(RES) - CA; M1; U.S. Fed funds rate; US and JP Real GDP 
 #CA as share of GDP, but Reserves in dollars
 #Need to get JP GDP in dollars
@@ -206,7 +205,7 @@ stargazer(stability, type = "latex", title="Table 7: Model Stability Results")
 
 #VAR estimation result: the more lag we include the more observation we will use 
 #The first equations ols estimation see if is significant or not 
-#The Second  equations ols estimation see if is significant or not più stelline più significant 
+#The Second  equations ols estimation see if is significant or not piÃ¹ stelline piÃ¹ significant 
 #To make a table in a more beautiful way we can use stargazer as a function that produces nice tables 
 
 #stargazer(Modeldataset1("varresults"),type= "text")# put together all variables 

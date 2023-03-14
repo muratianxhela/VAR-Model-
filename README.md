@@ -50,25 +50,27 @@ library(readxl)
 The step we need to do in order to estimate the VAR model:
 
 1. To check for the integration of the series to make sure our series is stationarity I(0).
-2. Check the appropriate (OPTIMAL) lag length, too many lag we loss observations too many parameters to estimate using few lags that will cause some serial problems. 
-3.Estimate the model, the number of independent variable constitute the number of equations of the model we use OLS but we go equation by equation the package vars will do it for us.
-4.The model is stable, we look at the eigenvalues of the coefficient to see if their moduli are less than one. If the series is stationary it should be less than one. 
-5.Granger Causality test .
-6. Impulse Function IRFs.
-7.Forecasting.
+2. Check the appropriate (OPTIMAL) lag length, too many lag we loss observations too many parameters to estimate using few lags that will cause some serial problems.
+3.  
+4.Estimate the model, the number of independent variable constitute the number of equations of the model we use OLS but we go equation by equation the package vars will do it for us.
 
-For this project I decidet to download data directly from FRED 
+5.The model is stable, we look at the eigenvalues of the coefficient to see if their moduli are less than one. If the series is stationary it should be less than one.
 
-JAPAN KFA = diff(RES) - CA; M1; U.S. Fed funds rate; US and JP Real GDP 
+6.Granger Causality test.
+
+7. Impulse Function IRFs.
+8.Forecasting.
+
+For this project I decidet to download data directly from FRED. 
+
+`JAPAN KFA = diff(RES)` - CA; M1; U.S. Fed funds rate; US and JP Real GDP 
 In this case we are expressing CA as share of GDP, but Reserves in dollars
 At this point we need to get JP GDP in dollars, and get NGDP in yen and exchange rate
 ```
 setDefaults(getSymbols,src='FRED')
 getSymbols("JPNB6BLTT02STSAQ",src='FRED')
 ```
-
-```
-JPNB6BLTT02STSAQ=JPNB6BLTT02STSAQ["/2022-01-01"] ```this is the bases time series Current account Balance: Total: Total Balance as % of GDP for Japan 
+`JPNB6BLTT02STSAQ=JPNB6BLTT02STSAQ["/2022-01-01"]`this is the bases time series Current account Balance: Total: Total Balance as % of GDP for Japan 
 ```
 CA<-ts(JPNB6BLTT02STSAQ,end=c(2022,4),freq=4)```  make the courrent account by seting this as a time series with the end date 
 ```mean(CA)``` it is in percentage of GRdp so it is a surplus of  2.78

@@ -108,14 +108,14 @@ getSymbols("GDPC1",src='FRED')
 GDPC1=GDPC1["/2022-04-01"]
 USY<-ts(GDPC1,end=c(2022,1),freq=4)```
 Again we repeat the same steps but this time to obtain the Japan real GDP
-```
-getSymbols("NAEXKP01JPQ189S",src='FRED')   
+
+```getSymbols("NAEXKP01JPQ189S",src='FRED')   
 NAEXKP01JPQ189S=NAEXKP01JPQ189S["/2022-01-01"]
 JPY<-ts(NAEXKP01JPQ189S,end=c(2022,4),freq=4)```
 
-At this point we can take the logs of 3 variables in order to notice different lengths
-```
-data<-cbind(log(USY),log(USR),log(JPY),log(JPM1),KFA)
+At this point we can take the logs of 3 variables in order to notice different lengths. 
+
+```data<-cbind(log(USY),log(USR),log(JPY),log(JPM1),KFA)
 view(data)
 names<-c("USY","USR","JPY","JPM1","KFA")
 colnames(data)<-names
@@ -136,7 +136,6 @@ data<-na.omit(data)
 sum(is.na(data))
 plot(data)
 dim(data)
-
 str(data)
 head(data)
 summary(data)
@@ -152,26 +151,22 @@ for(i in 1:ncol(data)){
   pptab<-rbind(pptab,pp$p.value)
 }
 pptab```
+
 From the result we can see that the series are not stationary. WE could first test for cointegration and estimate a vector error correction model if series were cointegrated. Otherwise,  we may estimate a VAR model on data integrated of first-order i.e., I(1) after taking the first difference to make it stationary.
 
 Now we need to redo with differences
-```
-data<-cbind(diff(log(USY)),diff(USR),diff(log(JPY)),diff(log(JPM1)),KFA)
+```data<-cbind(diff(log(USY)),diff(USR),diff(log(JPY)),diff(log(JPM1)),KFA)
 data<-na.omit(data)
 colnames(data)<-names
-
 pptab<-NULL
 for(i in 1:ncol(data)){
   pp<-PP.test(data[,i])
   pptab<-rbind(pptab,pp$p.value)
 }
-pptab  ```
+pptab ```
 
-At this point our data is now stationary and we can continue our analysis.
-
-Determine the persistence of the model acf or pacf:
-```
-par(mfrow=c(2,1))
+At this point our data is now stationary and we can continue our analysis, Determine the persistence of the model acf or pacf:
+```par(mfrow=c(2,1))
 acf(USY, main="ACF for USY") #describe the graph
 pacf(USY, main="PACF for USY") 
 par(mfrow=c(1,1))
@@ -189,15 +184,9 @@ library(vars)
 ```
 Finding the Optimal lags.
 
-```
-Lagselect<-VARselect(var, lag.max=10, type="const")
-Lagselect$selection 
-
-
-```
-In order to print the optimal lag we are going to use in this case  all criteria AIC HQ AND SC FPE agree for one lag 
-
-Estimate the model by using OLS equations, the number of variables determine the number of equations also.
+```Lagselect<-VARselect(var, lag.max=10, type="const")
+Lagselect$selection ```
+In order to print the optimal lag we are going to use in this case  all criteria AIC HQ AND SC FPE agree for one lag, estimate the model by using OLS equations, the number of variables determine the number of equations also.
 ```
 Modeldataset1<-VAR(var, p=1, type="const", season=NULL, exog=NULL)
 summary(Modeldataset1)

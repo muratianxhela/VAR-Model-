@@ -17,15 +17,16 @@ IMPORTANT PACKAGES 1."VARS"--MOST IMPORTANT
 - fevd,
 - irf,
 - arch.test,
-- normality.test
+- normality.test,
 -roots,
 - serial.test,
-- stability,VARelect. 
+- stability,
+- VARselect. 
 
 ```
 rm(list=ls())
 ```
-#Load required packages for running VAR
+Lets now load the required packages that we need for our model.
 ```
 install.packages("quantmod")
 install.packages("tikzDevice")
@@ -46,21 +47,17 @@ install.packages("stargazer")
 library(stargazer)# to create tables 
 library(readxl)
 ```
+The step we need to do in order to estimate the VAR model:
 
-######## The step we need to do in order to estimate the VAR model #########
+1. To check for the integration of the series to make sure our series is stationarity I(0)
+2. Check the appropriate (OPTIMAL) lag length, too many lag we loss observations too many parameters to estimate using few lags that will cause some serial problems. 
+3.Estimate the model, the number of independent variable constitute the number of equations of the model we use OLS but we go equation by equation the package vars will do it for us.
+4. The model is stable, we look at the eigenvalues of the coefficient to see if their moduli are less than one. If the series is stationary it should be less than one. 
+5.Granger Causality test 
+6. Impulse Function IRFs
+7.Forecasting
 
-#1. To check for the integration of the series to make sure our series is stationarity I(0)
-#2. Check the appropriate (OPTIMAL) lag length, too many lag we loss observations too many parameters to estimate using few lags that will cause some serial problems. 
-#3.Estimate the model, the number of independent variable constitute the number of equations of the model we use OLS but we go equation by equation the package vars will do it for us.
-#4. The model is stable, we look at the eigenvalues of the coefficient to see if their moduli are less than one. If the series is stationary it should be less than one. 
-#5.Granger Causality test 
-#6. Impulse Function IRFs
-#7.Forecasting
-
-###########################################################################
-
-#Install packages if necessary
-#Download data from FRED directly
+For this project I decidet to download data directly from FRED 
 
 
 #JAPAN KFA = diff(RES) - CA; M1; U.S. Fed funds rate; US and JP Real GDP 

@@ -11,7 +11,13 @@ ABSTRACT::: I decided to create a model using Japanese capital flows in this pro
 
 **INSTALL AND LOAD PACKAGES**
 
-IMPORTANT PACKAGES 1."VARS"--MOST IMPORTANT-casuality,fanchart,fevd,irf,arch.test,normality.test
+IMPORTANT PACKAGES 1."VARS"--MOST IMPORTANT
+-casuality,
+- fanchart,
+- fevd,
+- irf,
+- arch.test,
+- normality.test
 -roots,
 - serial.test,
 - stability,VARelect. 

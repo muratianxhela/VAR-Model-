@@ -1,6 +1,5 @@
-# VAR-Model-Estimation
+>In this project I'm going to use VAR model and Garch multivariate model to analyze financial time series. In this project I decide to create the Japan capital financial account as a function of Japan money and US interest rate as well as GDP in both countries, which of these variable can effect the Japan capital financial account.
 
-##########################################################################
 
 # Title:    Importing data from the database
 # File:      yahooo

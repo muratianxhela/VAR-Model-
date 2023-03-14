@@ -6,7 +6,7 @@ File:      yahooo
 Project:  VAR MODEL IN R 
 
 
-ABSTRACT::: I decided to create a model using Japanese capital flows in this project.In this case, the JAPAN capital financial account is represented as a function of JAPAN money and US interest rate as well as GDP in both countries. After pulling data directly from FRED and creating variables for our dataset, we estimate a model of Japan's capital flows. In this project we will use Granger Causality tests, orthogonalized Impulse Response Functions, and Forecast Error Variance Decompositions to show the impact of income and monetary variables. 
+ABSTRACT: I decided to create a model using Japanese capital flows in this project.In this case, the JAPAN capital financial account is represented as a function of JAPAN money and US interest rate as well as GDP in both countries. After pulling data directly from FRED and creating variables for our dataset, we estimate a model of Japan's capital flows. In this project we will use Granger Causality tests, orthogonalized Impulse Response Functions, and Forecast Error Variance Decompositions to show the impact of income and monetary variables. 
 
 
 **INSTALL AND LOAD PACKAGES**
@@ -50,14 +50,10 @@ library(readxl)
 The step we need to do in order to estimate the VAR model:
 
 1. To check for the integration of the series to make sure our series is stationarity I(0).
-2. Check the appropriate (OPTIMAL) lag length, too many lag we loss observations too many parameters to estimate using few lags that will cause some serial problems.
-3.  
-4.Estimate the model, the number of independent variable constitute the number of equations of the model we use OLS but we go equation by equation the package vars will do it for us.
-
+2. Check the appropriate (OPTIMAL) lag length, too many lag we loss observations too many parameters to estimate using few lags that will cause some serial problems.  
+3.Estimate the model, the number of independent variable constitute the number of equations of the model we use OLS but we go equation by equation the package vars will do it for us.
 5.The model is stable, we look at the eigenvalues of the coefficient to see if their moduli are less than one. If the series is stationary it should be less than one.
-
 6.Granger Causality test.
-
 7. Impulse Function IRFs.
 8.Forecasting.
 
@@ -71,56 +67,53 @@ setDefaults(getSymbols,src='FRED')
 getSymbols("JPNB6BLTT02STSAQ",src='FRED')
 ```
 `JPNB6BLTT02STSAQ=JPNB6BLTT02STSAQ["/2022-01-01"]`this is the bases time series Current account Balance: Total: Total Balance as % of GDP for Japan 
-```
-CA<-ts(JPNB6BLTT02STSAQ,end=c(2022,4),freq=4)```  make the courrent account by seting this as a time series with the end date 
-```mean(CA)``` it is in percentage of GRdp so it is a surplus of  2.78
+`
+CA<-ts(JPNB6BLTT02STSAQ,end=c(2022,4),freq=4)` make the courrent account by seting this as a time series with the end date 
+`mean(CA)` it is in percentage of GRdp so it is a surplus of  2.78.
+
 We need to use reserves to model the capital flows which are in Us dollars. We have to do a couple of steps as teh gdp is in yen to turn it in percetage points
-```getSymbols("JPNGDPNQDSMEI",src='FRED')``` We gonna pull nominal gdp# Current Price Gross Domestic Product in Japan. 
+`getSymbols("JPNGDPNQDSMEI",src='FRED')` We gonna pull nominal gdp# Current Price Gross Domestic Product in Japan. 
 ```JPNGDPNQDSMEI=JPNGDPNQDSMEI["/2022-01-01"]
 NGDP<-ts(JPNGDPNQDSMEI,end=c(2022,4),freq=4)```
 
-```getSymbols("CCUSMA02JPM618N",src='FRED')``` National Currency to US Dollar Exchange Rate: Average of Daily Rates for Japan
+`getSymbols("CCUSMA02JPM618N",src='FRED')` National Currency to US Dollar Exchange Rate: Average of Daily Rates for Japan
 ```CCUSMA02JPM618N=CCUSMA02JPM618N["/2022-07-01"]
 JPNUSD<-ts(CCUSMA02JPM618N,end=c(2022,1),freq=4)
 NGDPUSD<-NGDP/JPNUSD ``` Divide the exchange rate to turn yen to dollars
-
-#KFA = diff(Reserves) - CA# pull reserves to get my series in dollars 
-```getSymbols("JPNB6FARA01CXCUQ",src='FRED')# Reserve assets Net for Japan
+Now we need to pull reserves to get this series in dollars and we also need to obtain the reserve asset Net for Japan. 
+```KFA = diff(Reserves)  
+getSymbols("JPNB6FARA01CXCUQ",src='FRED') 
 JPNB6FARA01CXCUQ=JPNB6FARA01CXCUQ["/2022-04-01"]
 RES<-ts(JPNB6FARA01CXCUQ,end=c(2022,4),freq=4)
 KFA<-(100*diff(RES)/NGDPUSD-CA)
 mean(100*diff(RES)/NGDPUSD)
 mean(KFA)``` 
-#So now we have the variable of interest which is capital fiancial account
-### If the capital and financial accounts are negative, the country has a net financial outflow. 
-#It has more claims than it does liabilities, either because of an increase in claims by the economy abroad or a reduction in liabilities from foreign economies.
-#The current account should be recording a surplus at this stage. 
-#That indicates the economy is a net creditor, providing funds to the world
+So now we have the variable of interest which is capital fiancial account. If the capital and financial accounts are negative, the country has a net financial outflow. It has more claims than it does liabilities, either because of an increase in claims by the economy abroad or a reduction in liabilities from foreign economies. The current account should be recording a surplus at this stage. That indicates the economy is a net creditor, providing funds to the world
 
-
-# To get our explanotery varibles we  have M1
+To get our explanotery varibles we have M1 which I downloaded diredctly from Yahoo. 
 ```
-getSymbols("MANMM101JPM189S",src='FRED')# M1 for Japan 
+getSymbols("MANMM101JPM189S",src='FRED')
 MANMM101JPM189S=MANMM101JPM189S["/2022-06-01"]
 JPM1<-ts(MANMM101JPM189S,end=c(2022,4),freq=4)```
-#US intrest rate 
+
+Now we use the same steps in order to obtain the US intrest rate. 
 ```
 getSymbols("BOGZ1FL072052006Q",src='FRED')  
 BOGZ1FL072052006Q=BOGZ1FL072052006Q["/2022-01-01"]
 USR<-ts(BOGZ1FL072052006Q,end=c(2022,4),freq=4)```
-#Us GDP
+
+Same procedure for the Us GDP.
 ```
 getSymbols("GDPC1",src='FRED') 
 GDPC1=GDPC1["/2022-04-01"]
 USY<-ts(GDPC1,end=c(2022,1),freq=4)```
-#Japan real GDP
+Again we repeat teh same steps but this time to obtain the Japan real GDP
 ```
 getSymbols("NAEXKP01JPQ189S",src='FRED')   
 NAEXKP01JPQ189S=NAEXKP01JPQ189S["/2022-01-01"]
 JPY<-ts(NAEXKP01JPQ189S,end=c(2022,4),freq=4)```
 
-#Take logs of 3 variables
-#Combine; notice different lengths
+At this point we can take the logs of 3 variables in order to notice different lengths
 ```
 data<-cbind(log(USY),log(USR),log(JPY),log(JPM1),KFA)
 view(data)

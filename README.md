@@ -9,10 +9,13 @@ Project:  VAR MODEL IN R
 ABSTRACT::: I decided to create a model using Japanese capital flows in this project.In this case, the JAPAN capital financial account is represented as a function of JAPAN money and US interest rate as well as GDP in both countries. After pulling data directly from FRED and creating variables for our dataset, we estimate a model of Japan's capital flows. In this project we will use Granger Causality tests, orthogonalized Impulse Response Functions, and Forecast Error Variance Decompositions to show the impact of income and monetary variables. 
 
 
-#INSTALL AND LOAD PACKAGES ################################
+**INSTALL AND LOAD PACKAGES**
 
-####IMPORTANT PACKAGES 1."VARS"--MOST IMPORTANT-casuality,fanchart,fevd,irf,arch.test,normality.test
-#roots,serial.test,stability,VARselect. 
+IMPORTANT PACKAGES 1."VARS"--MOST IMPORTANT-casuality,fanchart,fevd,irf,arch.test,normality.test
+-roots,
+- serial.test,
+- stability,VARelect. 
+
 ```
 rm(list=ls())
 ```

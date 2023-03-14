@@ -11,14 +11,14 @@ ABSTRACT::: I decided to create a model using Japanese capital flows in this pro
 
 **INSTALL AND LOAD PACKAGES**
 
-IMPORTANT PACKAGES 1."VARS"--MOST IMPORTANT
+IMPORTANT PACKAGES 1."VARS"--MOST IMPORTANT:
 -casuality,
 - fanchart,
 - fevd,
 - irf,
 - arch.test,
 - normality.test,
--roots,
+ -roots,
 - serial.test,
 - stability,
 - VARselect. 
@@ -49,40 +49,38 @@ library(readxl)
 ```
 The step we need to do in order to estimate the VAR model:
 
-1. To check for the integration of the series to make sure our series is stationarity I(0)
+1. To check for the integration of the series to make sure our series is stationarity I(0).
 2. Check the appropriate (OPTIMAL) lag length, too many lag we loss observations too many parameters to estimate using few lags that will cause some serial problems. 
 3.Estimate the model, the number of independent variable constitute the number of equations of the model we use OLS but we go equation by equation the package vars will do it for us.
-4. The model is stable, we look at the eigenvalues of the coefficient to see if their moduli are less than one. If the series is stationary it should be less than one. 
-5.Granger Causality test 
-6. Impulse Function IRFs
-7.Forecasting
+4.The model is stable, we look at the eigenvalues of the coefficient to see if their moduli are less than one. If the series is stationary it should be less than one. 
+5.Granger Causality test .
+6. Impulse Function IRFs.
+7.Forecasting.
 
 For this project I decidet to download data directly from FRED 
 
-
-#JAPAN KFA = diff(RES) - CA; M1; U.S. Fed funds rate; US and JP Real GDP 
-#CA as share of GDP, but Reserves in dollars
-#Need to get JP GDP in dollars
-#Get NGDP in yen and exchange rate
+JAPAN KFA = diff(RES) - CA; M1; U.S. Fed funds rate; US and JP Real GDP 
+In this case we are expressing CA as share of GDP, but Reserves in dollars
+At this point we need to get JP GDP in dollars, and get NGDP in yen and exchange rate
 ```
 setDefaults(getSymbols,src='FRED')
 getSymbols("JPNB6BLTT02STSAQ",src='FRED')
 ```
 
-
-JPNB6BLTT02STSAQ=JPNB6BLTT02STSAQ["/2022-01-01"]# bases time series Current account Balance: Total: Total Balance as % of GDP for Japan 
-CA<-ts(JPNB6BLTT02STSAQ,end=c(2022,4),freq=4)# make teh courrent account by seting this as a time series with the end date 
-mean(CA)# it is in percentage of GRdp so it is a surplus of  2.78
-
-# we need to use reserves to model the capital flows which are in Us dollars . We have to do a couple of steps as teh gdp is in yen to turn it in percetage points
-```getSymbols("JPNGDPNQDSMEI",src='FRED') # we gonna pull nominal gdp# Current Price Gross Domestic Product in Japan 
-JPNGDPNQDSMEI=JPNGDPNQDSMEI["/2022-01-01"]
+```
+JPNB6BLTT02STSAQ=JPNB6BLTT02STSAQ["/2022-01-01"] ```this is the bases time series Current account Balance: Total: Total Balance as % of GDP for Japan 
+```
+CA<-ts(JPNB6BLTT02STSAQ,end=c(2022,4),freq=4)```  make the courrent account by seting this as a time series with the end date 
+```mean(CA)``` it is in percentage of GRdp so it is a surplus of  2.78
+We need to use reserves to model the capital flows which are in Us dollars. We have to do a couple of steps as teh gdp is in yen to turn it in percetage points
+```getSymbols("JPNGDPNQDSMEI",src='FRED')``` We gonna pull nominal gdp# Current Price Gross Domestic Product in Japan. 
+```JPNGDPNQDSMEI=JPNGDPNQDSMEI["/2022-01-01"]
 NGDP<-ts(JPNGDPNQDSMEI,end=c(2022,4),freq=4)```
 
-```getSymbols("CCUSMA02JPM618N",src='FRED')# National Currency to US Dollar Exchange Rate: Average of Daily Rates for Japan
-CCUSMA02JPM618N=CCUSMA02JPM618N["/2022-07-01"]
+```getSymbols("CCUSMA02JPM618N",src='FRED')``` National Currency to US Dollar Exchange Rate: Average of Daily Rates for Japan
+```CCUSMA02JPM618N=CCUSMA02JPM618N["/2022-07-01"]
 JPNUSD<-ts(CCUSMA02JPM618N,end=c(2022,1),freq=4)
-NGDPUSD<-NGDP/JPNUSD ```# divide the exchange rate to turn yen to dollars
+NGDPUSD<-NGDP/JPNUSD ``` Divide the exchange rate to turn yen to dollars
 
 #KFA = diff(Reserves) - CA# pull reserves to get my series in dollars 
 ```getSymbols("JPNB6FARA01CXCUQ",src='FRED')# Reserve assets Net for Japan

@@ -22,6 +22,7 @@
 rm(list=ls())
 ```
 #Load required packages for running VAR
+```
 install.packages("quantmod")
 install.packages("tikzDevice")
 library(tikzDevice)
@@ -39,8 +40,8 @@ library(forecast)
 library(tidyverse)#contain ggplot 
 install.packages("stargazer")
 library(stargazer)# to create tables 
-
 library(readxl)
+```
 
 ######## The step we need to do in order to estimate the VAR model #########
 
@@ -62,8 +63,10 @@ library(readxl)
 #CA as share of GDP, but Reserves in dollars
 #Need to get JP GDP in dollars
 #Get NGDP in yen and exchange rate
+```
 setDefaults(getSymbols,src='FRED')
 getSymbols("JPNB6BLTT02STSAQ",src='FRED')
+```
 
 
 JPNB6BLTT02STSAQ=JPNB6BLTT02STSAQ["/2022-01-01"]# bases time series Current account Balance: Total: Total Balance as % of GDP for Japan 
@@ -71,22 +74,22 @@ CA<-ts(JPNB6BLTT02STSAQ,end=c(2022,4),freq=4)# make teh courrent account by seti
 mean(CA)# it is in percentage of GRdp so it is a surplus of  2.78
 
 # we need to use reserves to model the capital flows which are in Us dollars . We have to do a couple of steps as teh gdp is in yen to turn it in percetage points
-getSymbols("JPNGDPNQDSMEI",src='FRED') # we gonna pull nominal gdp# Current Price Gross Domestic Product in Japan 
+```getSymbols("JPNGDPNQDSMEI",src='FRED') # we gonna pull nominal gdp# Current Price Gross Domestic Product in Japan 
 JPNGDPNQDSMEI=JPNGDPNQDSMEI["/2022-01-01"]
-NGDP<-ts(JPNGDPNQDSMEI,end=c(2022,4),freq=4)
+NGDP<-ts(JPNGDPNQDSMEI,end=c(2022,4),freq=4)```
 
-getSymbols("CCUSMA02JPM618N",src='FRED')# National Currency to US Dollar Exchange Rate: Average of Daily Rates for Japan
+```getSymbols("CCUSMA02JPM618N",src='FRED')# National Currency to US Dollar Exchange Rate: Average of Daily Rates for Japan
 CCUSMA02JPM618N=CCUSMA02JPM618N["/2022-07-01"]
 JPNUSD<-ts(CCUSMA02JPM618N,end=c(2022,1),freq=4)
-NGDPUSD<-NGDP/JPNUSD# divide the exchange rate to turn yen to dollars
+NGDPUSD<-NGDP/JPNUSD ```# divide the exchange rate to turn yen to dollars
 
 #KFA = diff(Reserves) - CA# pull reserves to get my series in dollars 
-getSymbols("JPNB6FARA01CXCUQ",src='FRED')# Reserve assets Net for Japan
+```getSymbols("JPNB6FARA01CXCUQ",src='FRED')# Reserve assets Net for Japan
 JPNB6FARA01CXCUQ=JPNB6FARA01CXCUQ["/2022-04-01"]
 RES<-ts(JPNB6FARA01CXCUQ,end=c(2022,4),freq=4)
 KFA<-(100*diff(RES)/NGDPUSD-CA)
 mean(100*diff(RES)/NGDPUSD)
-mean(KFA)# 
+mean(KFA)``` 
 #So now we have the variable of interest which is capital fiancial account
 ### If the capital and financial accounts are negative, the country has a net financial outflow. 
 #It has more claims than it does liabilities, either because of an increase in claims by the economy abroad or a reduction in liabilities from foreign economies.
@@ -95,24 +98,29 @@ mean(KFA)#
 
 
 # To get our explanotery varibles we  have M1
+```
 getSymbols("MANMM101JPM189S",src='FRED')# M1 for Japan 
 MANMM101JPM189S=MANMM101JPM189S["/2022-06-01"]
-JPM1<-ts(MANMM101JPM189S,end=c(2022,4),freq=4)
+JPM1<-ts(MANMM101JPM189S,end=c(2022,4),freq=4)```
 #US intrest rate 
+```
 getSymbols("BOGZ1FL072052006Q",src='FRED')  
 BOGZ1FL072052006Q=BOGZ1FL072052006Q["/2022-01-01"]
-USR<-ts(BOGZ1FL072052006Q,end=c(2022,4),freq=4)
+USR<-ts(BOGZ1FL072052006Q,end=c(2022,4),freq=4)```
 #Us GDP
+```
 getSymbols("GDPC1",src='FRED') 
 GDPC1=GDPC1["/2022-04-01"]
-USY<-ts(GDPC1,end=c(2022,1),freq=4)
+USY<-ts(GDPC1,end=c(2022,1),freq=4)```
 #Japan real GDP
+```
 getSymbols("NAEXKP01JPQ189S",src='FRED')   
 NAEXKP01JPQ189S=NAEXKP01JPQ189S["/2022-01-01"]
-JPY<-ts(NAEXKP01JPQ189S,end=c(2022,4),freq=4)
+JPY<-ts(NAEXKP01JPQ189S,end=c(2022,4),freq=4)```
 
 #Take logs of 3 variables
 #Combine; notice different lengths
+```
 data<-cbind(log(USY),log(USR),log(JPY),log(JPM1),KFA)
 view(data)
 names<-c("USY","USR","JPY","JPM1","KFA")
@@ -138,26 +146,26 @@ dim(data)
 str(data)
 head(data)
 summary(data)
-
+```
 ###Again, it is important to assess whether the variables under study are stationary or not. As we 
 #have said, having stationary variables is of an ideal case in our VAR even if we can run it without 
 #these.
 
 #Phillips-Perron stationarity test
-pptab<-NULL
+```pptab<-NULL
 for(i in 1:ncol(data)){
   pp<-PP.test(data[,i])
   pptab<-rbind(pptab,pp$p.value)
 }
-pptab
+pptab```
 
-stargazer(pptab,type = "latex",title=" Table 1: Phillips-Perron Test Results", align=TRUE, out="table1.txt")
 
 ### non stationary If the series are not stationary, 
 #WE could first test for cointegration and estimate a vector error correction model if series were cointegrated.
 #Otherwise,  we may estimate a VAR model on data integrated of first-order i.e., I(1) after taking the first difference to make it stationary.
 
 #redo with differences
+```
 data<-cbind(diff(log(USY)),diff(USR),diff(log(JPY)),diff(log(JPM1)),KFA)
 data<-na.omit(data)
 colnames(data)<-names
@@ -167,47 +175,44 @@ for(i in 1:ncol(data)){
   pp<-PP.test(data[,i])
   pptab<-rbind(pptab,pp$p.value)
 }
-pptab### our data is now stationary
+pptab  ```### our data is now stationary
 
-stargazer(pptab,type = "latex",title=" Phillips-Perron Test Results", align=TRUE, out="table2.txt")
+
 
 ######Determine the persistence of the model acf or pacf#####
-
+```
 par(mfrow=c(2,1))
 acf(USY, main="ACF for USY") #describe the graph
 pacf(USY, main="PACF for USY") 
 par(mfrow=c(1,1))
+```
 #describe the graph
-acf(USR, main="ACF for USR") #describe the graph
+```acf(USR, main="ACF for USR") #describe the graph
 pacf(USR, main="PACF for USR") #describe the graph
-
+```
 #plot IRFs: Make VAR (LOWER triangular: Order with most exogenous on left and most endogenous on right)
 #Loop to only make response of CA
 #Still default settings
-var<-data
+```var<-data
 library(vars)
-
+```
 ####Finding the Optimal lags###
-
+```
 Lagselect<-VARselect(var, lag.max=10, type="const")
 Lagselect$selection # print the optimal lag we are going to use in this case  all criteria AIC HQ AND SC FPE agree for one lag 
-
-stargazer(Lagselect$selection,type = "latex",title="A summary of the VAR-model lag selection", align=TRUE, out="table3.txt")
-
+```
 
 ##### Estimate the model by using OLS equations.  The number of variables determine the number of equations also.
-
+```
 Modeldataset1<-VAR(var, p=1, type="const", season=NULL, exog=NULL)
 summary(Modeldataset1)
 
-stargazer(Modeldataset1[["varresult"]],type = "latex",title="Table 4:Regression Results")
-
+```
 #####Stable model ####
-
+```
 stability<-roots(Modeldataset1, modulus=TRUE)
 stability# should be less than one to be stable, in this case is stable 
-
-stargazer(stability, type = "latex", title="Table 7: Model Stability Results")
+```
 
 #VAR estimation result: the more lag we include the more observation we will use 
 #The first equations ols estimation see if is significant or not 
@@ -219,28 +224,28 @@ stargazer(stability, type = "latex", title="Table 7: Model Stability Results")
 ##### Diagnosing the VAR model#####
 
 #####Serial Autocorrelation####(Portmanteau Test)
-
+```
 Serial1<-serial.test(Modeldataset1, lags.pt=12,type="PT.asymptotic")
 Serial1
+```
 
-#stargazer(Serial1[["serial"]][["p.value"]],type = "latex",title="Portmanteau Test Result", align=TRUE)
 #### it gives  me chi squared no sense of it
 #Describing the table of Portmanteau test 
 #If the p.value of the test is greater then 0.05 it suggests that there is no serial correlation so this is a good news. 
 
 ####Heteroscekasticity### (Multivariate ARCH-LM test) which in time series takes the form of a arch effects essentially those are period of volatility so we are trying to test for volatility here .###
-
+```
 Arch1<-arch.test(Modeldataset1, lags.multi=12, multivariate.only=TRUE)
-Arch1
+Arch1```
 #If the pvalue of the test is greater then 0.05 it suggests that so the model does not sufferes from heteroscedasticity this is a good news. 
 
-stargazer(Arch1[["arch.mul"]][["p.value"]], type = "latex", title=" Multivariate ARCH-LM Test Results")
+
 
 #####Normal Distribution#### (Jarque-Bera test) of residuals another assumption we want our residuals to be normal distributed###
-
+```
 Norm1<-normality.test(Modeldataset1, multivariate.only=TRUE)
 Norm1
-
+```
 stargazer(Norm1[["jb.mul"]], type = "latex", title="Table 6:Jarque-Bera Test Results")
 ## problem with this one 
 #Here we have 3 test the 
@@ -252,15 +257,16 @@ stargazer(Norm1[["jb.mul"]], type = "latex", title="Table 6:Jarque-Bera Test Res
 
 
 #Testing for Structural beaks in the residuals 
-Stabilty1<-stability(Modeldataset1, type="OLS-CUSUM")
+```Stabilty1<-stability(Modeldataset1, type="OLS-CUSUM")
 
-plot(Stabilty1)
+plot(Stabilty1)```
 ### In this case we can describe the result of the graph.
 #Describing the graph we have to see if there are points In the graph that exceeded the two red line in the bottom and in the top so the system is stable. 
 
 ######Granger Casuality  TEST##### association of two variable variable1 causes variable 2 or variable 2 causes variable 1 or both direction.
 
 #Granger Causality tests: I make pairwise vars, then a nice table
+****
 gctab<-NULL
 var<-data
 library(vars)
@@ -274,13 +280,13 @@ for(i in 1:4){
 colnames(gctab)<-c("Statistic","p-val.")
 rownames(gctab)<-colnames(var1$datamat[c(1:4)])
 gctab<-round(gctab,3)
-print(gctab)# JPY and USR  are indeed significant  are the variables that has an effect on Japan capital flows
+print(gctab)```
+# JPY and USR  are indeed significant  are the variables that has an effect on Japan capital flows
 
-stargazer(gctab, type = "latex", title="Granger Casuality TEST Results")
 
 
 ######ALTERNATIVE######
-
+```
 Grangervariable1<-causality(Modeldataset1, cause="USY")
 Grangervariable1 
 #Describing the result
@@ -293,12 +299,12 @@ Grangervariable4<-causality(Modeldataset1, cause="JPM1")
 Grangervariable4
 Grangervariable5<-causality(Modeldataset1, cause="KFA")
 Grangervariable5
-
+```
 #####Describing the result###
 #H0:variable2 do not granger cause variable1 il pvalue is greater than 0.05 we cannot reject the null hypothesis 
 
 #### Impulse response function#### how a variable will behave if one variable shocks(increase positive shock)
-
+```
 var<-data
 library(vars)
 var1<-VAR(var,type = c("const"),lag.max = 4,ic="SC")
@@ -306,26 +312,25 @@ for(i in 1:4){
   irf1<-irf(var1,impulse = colnames(var1$datamat[i]),response = colnames(var1$datamat[5]),n.ahead = 6,ortho = TRUE,ci=0.95,boot=TRUE,runs=100,cumulative = FALSE)
   plot(irf1)# four explonatory variable effecting the fith 
 }
-
+``````
 #####Variance DEcomposition#### how much these variable are influences by the shocks
 #Get FEVDs at 1,4,8,12-quarter horizons
-fevd1<-fevd(var1,n.ahead = 12)
+```fevd1<-fevd(var1,n.ahead = 12)
 fevd2<-fevd1$KFA
 fevdtab<-round(100*fevd2[c(1,4,8,12),],2)
 rownames(fevdtab)<-c(1,4,8,12)
 print(fevdtab)# Kfa is mostly affected by itself but also by USR AND JPY
-stargazer(fevdtab, type = "latex", title="Summary of the FEVD Results")
-
-
 plot(fevd1)
-
+```
 #####ALTERNATIVE#### SAMEEEEEEE 
+```
 FEVD1<-fevd(var1, n.ahead=12)
 plot(FEVD1)
-
+```
 #Describe the graph the percentage of the shock from what variable they come basically 
 
 ####VAR Forecasting###
+```
 par(mfrow=c(2,2))
 Forecast<-predict(Modeldataset1, n.ahead=4, ci=0.95)
 fanchart(Forecast, names="USY")
@@ -338,21 +343,5 @@ Forecast<-predict(Modeldataset1, n.ahead=4, ci=0.95)
 fanchart(Forecast, names="JPM1")
 Forecast<-predict(Modeldataset1, n.ahead=4, ci=0.95)
 fanchart(Forecast, names="KFA")
-
-
-
-Footer
-© 2023 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
+```
 

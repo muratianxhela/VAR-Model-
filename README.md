@@ -53,7 +53,7 @@ The step we need to do in order to estimate the VAR model:
 
 For this project I decidet to download data directly from FRED. 
 
-`JAPAN KFA = diff(RES)` - CA; M1; U.S. Fed funds rate; US and JP Real GDP 
+`JAPAN KFA = diff(RES)` - CA; M1; U.S. Fed funds rate; US and JP Real GDP. 
 In this case we are expressing CA as share of GDP, but Reserves in dollars. At this point we need to get JP GDP in dollars, and get NGDP in yen and exchange rate
 ```
 setDefaults(getSymbols,src='FRED')
@@ -73,7 +73,7 @@ We gonna pull nominal gdp# Current Price Gross Domestic Product in Japan:
 
 ```JPNGDPNQDSMEI=JPNGDPNQDSMEI["/2022-01-01"]
 NGDP<-ts(JPNGDPNQDSMEI,end=c(2022,4),freq=4)```
- Now we need the National Currency to US Dollar Exchange Rate: Average of Daily Rates for Japan:
+Now we need the National Currency to US Dollar Exchange Rate: Average of Daily Rates for Japan:
  
 `getSymbols("CCUSMA02JPM618N",src='FRED')` 
 ```CCUSMA02JPM618N=CCUSMA02JPM618N["/2022-07-01"]
@@ -126,15 +126,15 @@ ts.plot(JPY)
 ts.plot(JPM1)
 ts.plot(KFA)
 par(mfrow=c(1,1))#### to bigggg omg
-#plot(data)
+plot(data)
 is.na(data)
 sum(is.na(data))
-#apply(is.na(data),2,which)
-#data<-na_ma(data,k=3, weighting="exponential")
+apply(is.na(data),2,which)
+data<-na_ma(data,k=3, weighting="exponential")
 na_interpolation(data)-> data
-#data<-na.omit(data)
+data<-na.omit(data)
 sum(is.na(data))
-#plot(data)
+plot(data)
 dim(data)
 
 str(data)
@@ -308,7 +308,7 @@ rownames(fevdtab)<-c(1,4,8,12)
 print(fevdtab)# Kfa is mostly affected by itself but also by USR AND JPY
 plot(fevd1)
 ```
-LTERNATIV SAMEEEEEEE 
+ALTERNATIV SAMEEEEEEE 
 ```
 FEVD1<-fevd(var1, n.ahead=12)
 plot(FEVD1)

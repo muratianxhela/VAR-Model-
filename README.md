@@ -1,6 +1,6 @@
 *In this project I'm going to use VAR model and Garch multivariate model to analyze financial time series. In this project I decide to create the Japan capital financial account as a function of Japan money and US interest rate as well as GDP in both countries, which of these variable can effect the Japan capital financial account*.
 
-ABSTRACT: I decided to create a model using Japanese capital flows in this project.In this case, the JAPAN capital financial account is represented as a function of JAPAN money and US interest rate as well as GDP in both countries. After pulling data directly from FRED and creating variables for our dataset, we estimate a model of Japan's capital flows. In this project we will use Granger Causality tests, orthogonalized Impulse Response Functions, and Forecast Error Variance Decompositions to show the impact of income and monetary variables. 
+ABSTRACT: I decided to create a model using Japanese capital flows in this project. In this case, the JAPAN capital financial account is represented as a function of JAPAN money and US interest rate as well as GDP in both countries. After pulling data directly from FRED and creating variables for our dataset, we estimate a model of Japan's capital flows. In this project we will use Granger Causality tests, orthogonalized Impulse Response Functions, and Forecast Error Variance Decompositions to show the impact of income and monetary variables. 
 
 
 **INSTALL AND LOAD PACKAGES**
@@ -327,5 +327,5 @@ fanchart(Forecast, names="JPM1")
 Forecast<-predict(Modeldataset1, n.ahead=4, ci=0.95)
 fanchart(Forecast, names="KFA")
 ```
-In conclusion, we can say that JAPAN capital financial account is affected mainly by US interest rate Japan money. 
+In conclusion, we can say that JAPAN capital financial account is affected mainly by US interest rate and Japan money. 
  

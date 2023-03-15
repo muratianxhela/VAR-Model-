@@ -239,9 +239,11 @@ Our model does not pass this diagnosis but is not a problem. This is excatly the
 
 Testing for Structural beaks in the residuals:
 
-```Stabilty1<-stability(Modeldataset1, type="OLS-CUSUM")
+```
+Stabilty1<-stability(Modeldataset1, type="OLS-CUSUM")
 
-plot(Stabilty1)```
+plot(Stabilty1)
+```
 In this case we can describe the result of the graphm describing the graph we have to see if there are points In the graph that exceeded the two red line in the bottom and in the top so the system is stable. 
 
 Granger Casuality  TEST association of two variable variable1 causes variable 2 or variable 2 causes variable 1 or both direction.
@@ -303,7 +305,7 @@ rownames(fevdtab)<-c(1,4,8,12)
 print(fevdtab)# Kfa is mostly affected by itself but also by USR AND JPY
 plot(fevd1)
 ```
-ALTERNATIV SAMEEEEEEE 
+ALTERNATIVE 
 ```
 FEVD1<-fevd(var1, n.ahead=12)
 plot(FEVD1)

@@ -54,6 +54,8 @@ The step we need to do in order to estimate the VAR model:
 For this project I decidet to download data directly from FRED. 
 
 `JAPAN KFA = diff(RES)` - CA; M1; U.S. Fed funds rate; US and JP Real GDP. 
+
+```
 In this case we are expressing CA as share of GDP, but Reserves in dollars. At this point we need to get JP GDP in dollars, and get NGDP in yen and exchange rate
 ```
 setDefaults(getSymbols,src='FRED')

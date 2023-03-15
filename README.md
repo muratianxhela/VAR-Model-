@@ -88,21 +88,25 @@ JPNB6FARA01CXCUQ=JPNB6FARA01CXCUQ["/2022-04-01"]
 RES<-ts(JPNB6FARA01CXCUQ,end=c(2022,4),freq=4)
 KFA<-(100*diff(RES)/NGDPUSD-CA)
 mean(100*diff(RES)/NGDPUSD)
-mean(KFA)``` 
+mean(KFA)
+``` 
 
 So now we have the variable of interest which is capital fiancial account. If the capital and financial accounts are negative, the country has a net financial outflow. It has more claims than it does liabilities, either because of an increase in claims by the economy abroad or a reduction in liabilities from foreign economies. The current account should be recording a surplus at this stage. That indicates the economy is a net creditor, providing funds to the world
-
 To get our explanotery varibles we have M1 which I downloaded diredctly from Yahoo. 
+
 ```
 getSymbols("MANMM101JPM189S",src='FRED')
 MANMM101JPM189S=MANMM101JPM189S["/2022-06-01"]
-JPM1<-ts(MANMM101JPM189S,end=c(2022,4),freq=4)```
+JPM1<-ts(MANMM101JPM189S,end=c(2022,4),freq=4)
+
+```
 
 Now we use the same steps in order to obtain the US intrest rate. 
 ```
 getSymbols("BOGZ1FL072052006Q",src='FRED')  
 BOGZ1FL072052006Q=BOGZ1FL072052006Q["/2022-01-01"]
-USR<-ts(BOGZ1FL072052006Q,end=c(2022,4),freq=4)```
+USR<-ts(BOGZ1FL072052006Q,end=c(2022,4),freq=4)
+```
 
 Same procedure for the Us GDP.
 ```
